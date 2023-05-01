@@ -11,6 +11,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Slf4j
 @Configuration
-@MapperScan("org.dog.*.mapper")
+@MapperScan("org.dog.luckyinfrastructure.gateway.impl.mapper")
 public class MapperScanConfig {
 }

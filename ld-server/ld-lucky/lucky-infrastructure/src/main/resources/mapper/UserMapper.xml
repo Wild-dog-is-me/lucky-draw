@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dog.luckyinfrastructure.gateway.impl.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="org.dog.luckyinfrastructure.gateway.impl.dataobject.UserDB">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="username" column="username" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="creator" column="creator" jdbcType="VARCHAR"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="updater" column="updater" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,username,password,
+        name,phone,create_time,
+        creator,update_time,updater
+    </sql>
+
+    <select id="findByUserName" resultMap="BaseResultMap">
+        select *
+        from bld_user a
+        <where>
+            <if test="id != null">
+                and a.id = #{id}
+            </if>
+            <if test="username != null and username != ''">
+                and a.username = #{username}
+            </if>
+        </where>
+    </select>
+</mapper>
