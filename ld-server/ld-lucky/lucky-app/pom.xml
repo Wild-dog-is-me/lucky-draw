@@ -2,24 +2,31 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>ld-server</artifactId>
-    <packaging>pom</packaging>
     <parent>
-        <artifactId>lucky-draw</artifactId>
+        <artifactId>ld-lucky</artifactId>
         <groupId>org.dog</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <modules>
-        <module>ld-lucky</module>
-        <module>ld-user</module>
-    </modules>
+    <packaging>jar</packaging>
+    <artifactId>lucky-app</artifactId>
+
     <dependencies>
+
         <dependency>
             <groupId>org.dog</groupId>
-            <artifactId>ld-base-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <artifactId>lucky-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.dog</groupId>
+            <artifactId>lucky-infrastructure</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.cola</groupId>
+            <artifactId>cola-component-catchlog-starter</artifactId>
         </dependency>
     </dependencies>
+
 </project>

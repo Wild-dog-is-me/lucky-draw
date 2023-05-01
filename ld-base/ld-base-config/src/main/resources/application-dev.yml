@@ -1,0 +1,21 @@
+#解决bean的重复命名,也可以在bean上传参（给定一个id）
+spring:
+  main:
+    allow-bean-definition-overriding : true
+
+ld:
+  host: 127.0.0.1
+  mysql-port: 3306
+  nacos-port: 8848
+  redis-port: 6379
+#  rocketmq-port:
+#nacos
+nacos:
+  #dev
+  namespace: 4667a529-ef9d-4bad-b4dc-7cd9d8e45a48
+
+#database
+DB_HOST: ${ld.host}:${ld.mysql-port}
+DB_NAME: raffle
+DB_USERNAME: root
+DB_PASSWORD: root

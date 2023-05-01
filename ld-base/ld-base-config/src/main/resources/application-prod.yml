@@ -1,0 +1,14 @@
+bld:
+  host: 线上配置
+  mysql-port: 线上配置
+  nacos-port: 线上配置
+  redis-port: 线上配置
+  rocketmq-port: 线上配置
+#nacos
+nacos:
+  namespace: 线上配置
+#database
+DB_HOST: 线上配置
+DB_NAME: 线上配置
+DB_USERNAME: 线上配置
+DB_PASSWORD: 线上配置

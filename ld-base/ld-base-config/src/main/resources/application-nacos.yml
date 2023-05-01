@@ -1,0 +1,10 @@
+#nacos
+spring:
+  cloud:
+    nacos:
+      server-addr: ${ld.host}:${ld.nacos-port}
+      discovery:
+        username: nacos
+        password: nacos
+        # loc
+        namespace: 4667a529-ef9d-4bad-b4dc-7cd9d8e45a48

@@ -1,0 +1,27 @@
+spring:
+  cloud:
+    # 网关
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      routes:
+        - id: ld-lucky
+          uri: http://127.0.0.1:7214/
+          predicates:
+            - Path=/ld-lucky/**
+          filters:
+            # 1表示过滤一个路径
+            - StripPrefix=1
+
+# 忽略 url 拦截
+ld.global-filter:
+  ignoreUrlSet:
+    - /user/login
+    - /user/register
+    - /ld-druid/
+    - /test
+  authorization: Authorization
