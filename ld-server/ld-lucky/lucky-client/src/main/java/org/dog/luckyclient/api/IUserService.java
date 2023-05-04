@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Primary;
  * @Description:
  */
 
-@Primary
 public interface IUserService {
 
     /**

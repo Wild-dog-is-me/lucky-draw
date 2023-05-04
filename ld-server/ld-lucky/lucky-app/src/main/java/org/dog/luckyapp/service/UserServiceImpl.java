@@ -3,7 +3,9 @@ package org.dog.luckyapp.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dog.config.util.JwtUtil;
 import org.dog.luckyapp.service.user.command.UserRegisterCmdExe;
+import org.dog.luckyapp.service.user.query.UserLoginQueryExe;
 import org.dog.luckyclient.api.IUserService;
 import org.dog.luckyclient.dto.cmd.UserRegisterCmd;
 import org.dog.luckyclient.dto.cmd.UserUpdateCmd;
@@ -11,6 +13,8 @@ import org.dog.luckyclient.dto.data.UserVO;
 import org.dog.luckyclient.dto.query.UserListByParamQuery;
 import org.dog.luckyclient.dto.query.UserLoginQuery;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * @Author: Odin
@@ -24,6 +28,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements IUserService {
 
     private final UserRegisterCmdExe userRegisterCmdExe;
+    private final UserLoginQueryExe userLoginQueryExe;
 
     @Override
     public UserVO register(UserRegisterCmd cmd) {
@@ -32,7 +37,15 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public String login(UserLoginQuery query) {
-        return null;
+        UserVO userVO = userLoginQueryExe.execute(query);
+        // JWT
+
+        return JwtUtil.createToken(Map.of(
+                "username", userVO.getUsername(),
+                "name", userVO.getName(),
+                "phone", userVO.getPhone(),
+                "id", userVO.getId()
+        ));
     }
 
     @Override

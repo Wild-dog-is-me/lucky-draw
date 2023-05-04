@@ -6,6 +6,7 @@ import org.dog.common.annotation.ResponseResult;
 import org.dog.luckyclient.api.IUserService;
 import org.dog.luckyclient.dto.cmd.UserRegisterCmd;
 import org.dog.luckyclient.dto.data.UserVO;
+import org.dog.luckyclient.dto.query.UserLoginQuery;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,11 +23,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/v1/user")
 public class UserController {
 
-    private final IUserService iUserService;
+    private final IUserService userService;
 
     @PostMapping("/register")
     public UserVO register(@Validated @RequestBody UserRegisterCmd cmd) {
-        return iUserService.register(cmd);
+        return userService.register(cmd);
+    }
+
+    @PostMapping("/login")
+    public String login(@Validated @RequestBody UserLoginQuery query) {
+        return userService.login(query);
     }
 
 
