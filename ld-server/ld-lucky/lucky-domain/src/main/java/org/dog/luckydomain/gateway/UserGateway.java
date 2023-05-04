@@ -1,5 +1,7 @@
 package org.dog.luckydomain.gateway;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.dog.luckyclient.dto.query.UserListByParamQuery;
 import org.dog.luckydomain.user.UserEntity;
 
 /**
@@ -15,4 +17,5 @@ public interface UserGateway {
 
     UserEntity findByUserName(Long id, String username);
 
+    IPage<UserEntity> listByParamQuery(UserListByParamQuery query);
 }

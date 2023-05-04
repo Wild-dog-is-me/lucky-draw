@@ -1,8 +1,11 @@
 package org.dog.luckyinfrastructure.gateway.impl;
 
 import com.alibaba.cola.exception.SysException;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dog.luckyclient.dto.query.UserListByParamQuery;
 import org.dog.luckydomain.gateway.UserGateway;
 import org.dog.luckydomain.user.UserEntity;
 import org.dog.luckyinfrastructure.convertor.UserConvertor;
@@ -27,6 +30,22 @@ public class UserGatewayImpl implements UserGateway {
 
     @Override
     public UserEntity save(UserEntity entity) {
+        if (Objects.isNull(entity.getId())) {
+            return addUser(entity);
+        }
+        return updateUser(entity);
+    }
+
+    private UserEntity updateUser(UserEntity entity) {
+        UserDB userDB = UserConvertor.toUserDB(entity);
+        int res = userMapper.updateById(userDB);
+        if (res <= 0) {
+            throw new SysException("修改失败");
+        }
+        return UserConvertor.toEntity(userDB);
+    }
+
+    private UserEntity addUser(UserEntity entity) {
         UserDB userDB = UserConvertor.toUserDB(entity);
         int res = userMapper.insert(userDB);
         if (res <= 0) {
@@ -42,5 +61,12 @@ public class UserGatewayImpl implements UserGateway {
             return null;
         }
         return UserConvertor.toEntity(userDB);
+    }
+
+    @Override
+    public IPage<UserEntity> listByParamQuery(UserListByParamQuery query) {
+        IPage<UserDB> userDBIPage = userMapper.listByParamQuery(new Page<UserEntity>(query.getPageIndex(), query.getPageSize()), query);
+
+        return userDBIPage.convert(UserConvertor::toEntity);
     }
 }

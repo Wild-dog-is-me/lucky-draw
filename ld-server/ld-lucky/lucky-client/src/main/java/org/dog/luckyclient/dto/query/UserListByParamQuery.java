@@ -16,8 +16,8 @@ public class UserListByParamQuery extends PageQuery {
 
     private Long id;
 
-    private String username;
+    private String name;
 
-    private String password;
+    private String phone;
 
 }

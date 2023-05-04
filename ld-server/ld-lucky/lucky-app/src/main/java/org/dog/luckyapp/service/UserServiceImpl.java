@@ -1,10 +1,15 @@
 package org.dog.luckyapp.service;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dog.config.exception.LdException;
 import org.dog.config.util.JwtUtil;
 import org.dog.luckyapp.service.user.command.UserRegisterCmdExe;
+import org.dog.luckyapp.service.user.command.UserUpdateCmdExe;
+import org.dog.luckyapp.service.user.query.UserListByParamQueryExe;
 import org.dog.luckyapp.service.user.query.UserLoginQueryExe;
 import org.dog.luckyclient.api.IUserService;
 import org.dog.luckyclient.dto.cmd.UserRegisterCmd;
@@ -29,6 +34,8 @@ public class UserServiceImpl implements IUserService {
 
     private final UserRegisterCmdExe userRegisterCmdExe;
     private final UserLoginQueryExe userLoginQueryExe;
+    private final UserListByParamQueryExe userListByParamQueryExe;
+    private final UserUpdateCmdExe userUpdateCmdExe;
 
     @Override
     public UserVO register(UserRegisterCmd cmd) {
@@ -50,16 +57,24 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public IPage<UserVO> page(UserListByParamQuery query) {
-        return null;
+        return userListByParamQueryExe.execute(query);
     }
 
     @Override
     public UserVO one(Long id) {
-        return null;
+        final var query = new UserListByParamQuery();
+        query.setId(id);
+        IPage<UserVO> iPage = userListByParamQueryExe.execute(query);
+
+        if (CollUtil.isEmpty(iPage.getRecords())) {
+            throw new LdException("该用户不存在！");
+        }
+        return iPage.getRecords().get(0);
     }
 
     @Override
     public UserVO update(UserUpdateCmd cmd) {
-        return null;
+        return userUpdateCmdExe.execute(cmd);
     }
+
 }
