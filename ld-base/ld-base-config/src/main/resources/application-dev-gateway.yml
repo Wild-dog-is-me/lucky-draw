@@ -8,6 +8,12 @@ spring:
             allowedOrigins: "*"
             allowedMethods: "*"
             allowedHeaders: "*"
+      default-filters:
+        - name: IpRequestRateLimiter
+          args:
+            key-resolver: "#{@ipKeyResolver}"
+            redis-rate-limiter.replenishRate: 10 #字段为令牌桶恢复速度，即每秒访问个数
+            redis-rate-limiter.burstCapacity: 10 #字段为令牌桶大小，即峰值流量来临时最大可访问数
       routes:
         - id: ld-lucky
           uri: http://127.0.0.1:7214/
@@ -24,4 +30,4 @@ ld.global-filter:
     - /user/register
     - /ld-druid/
     - /test
-  authorization: Authorization
+  AUTHORIZATION: Authorization

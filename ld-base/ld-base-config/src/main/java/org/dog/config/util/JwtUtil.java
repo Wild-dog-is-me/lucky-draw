@@ -2,9 +2,9 @@ package org.dog.config.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
-import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.interfaces.JWTVerifier;
 import lombok.extern.slf4j.Slf4j;
 import org.dog.config.exception.TokenAuthException;
 
@@ -51,13 +51,16 @@ public class JwtUtil {
         try {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SECRET)).build();
             jwt = verifier.verify(token);
+
             jwt.getClaims().forEach((k, v) -> result.put(k, v.asString()));
         } catch (Exception e) {
-            log.error("jwt_error:{}", e);
+            //错误处理
+            System.out.println("verifyToken_error" + e);
             throw new TokenAuthException(e.getMessage());
         }
         return result;
     }
+
 
     public static void main(String[] args) {
         Map<String, Object> params = new HashMap<>();

@@ -13,7 +13,6 @@
 
     <modules>
         <module>ld-lucky</module>
-        <module>ld-user</module>
     </modules>
     <dependencies>
         <dependency>

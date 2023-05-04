@@ -30,9 +30,4 @@ public class AdminUserController {
         return userService.page(query);
     }
 
-
-    @PostMapping("/one")
-    public UserVO one(@RequestParam(value = "id") Long id) {
-        return userService.one(id);
-    }
 }

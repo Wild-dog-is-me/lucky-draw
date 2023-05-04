@@ -16,7 +16,6 @@ import java.util.Objects;
  * @Description:
  */
 
-
 public class UserAssembler {
     public static UserEntity toAddEntity(UserRegisterCmd cmd) {
         UserEntity userEntity = new UserEntity();

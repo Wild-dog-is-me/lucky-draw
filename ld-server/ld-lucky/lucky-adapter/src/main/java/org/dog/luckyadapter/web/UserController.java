@@ -42,6 +42,13 @@ public class UserController {
         return userService.one(SecurityUtil.getUserId());
     }
 
+    @GetMapping("/one")
+    public UserVO one(@RequestParam(value = "id") Long id) {
+        System.out.println(SecurityUtil.getUserName());
+        log.info("username===>{}", SecurityUtil.getUserName());
+        return userService.one(id);
+    }
+
     @PostMapping("/update")
     public UserVO update(@Validated @RequestBody UserUpdateCmd cmd) {
         return userService.update(cmd);

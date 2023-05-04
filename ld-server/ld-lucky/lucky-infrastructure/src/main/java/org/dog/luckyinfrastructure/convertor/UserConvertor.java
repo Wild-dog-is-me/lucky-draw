@@ -1,11 +1,11 @@
 package org.dog.luckyinfrastructure.convertor;
+import org.dog.config.util.SecurityUtil;
 import org.dog.luckydomain.user.PassWord;
 import org.dog.luckydomain.user.UserEntity;
 import org.dog.luckydomain.user.UserName;
 import org.dog.luckyinfrastructure.gateway.impl.dataobject.UserDB;
 
 import java.util.Objects;
-
 
 public class UserConvertor {
 
@@ -21,9 +21,9 @@ public class UserConvertor {
         userDB.setPhone(entity.getPhone());
         userDB.setCreateTime(entity.getCreateTime());
         // 根据登入人的name值设置
-        userDB.setCreator("odin");
+        userDB.setCreator(SecurityUtil.getUserName());
         userDB.setUpdateTime(entity.getCreateTime());
-        userDB.setUpdater("odin");
+        userDB.setUpdater(SecurityUtil.getUserName());
 
         return userDB;
     }

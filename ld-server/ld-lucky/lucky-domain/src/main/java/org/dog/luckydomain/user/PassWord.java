@@ -13,14 +13,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class PassWord {
 
     private EncryptionPassWord encryptionPassWord;
 
-//    public PassWord(EncryptionPassWord encryptionPassWord) {
-//        this.encryptionPassWord = encryptionPassWord;
-//    }
+    public PassWord(EncryptionPassWord encryptionPassWord) {
+        this.encryptionPassWord = encryptionPassWord;
+    }
 
     public static String getEncryptionPassWord(String password) {
         return MD5.create().digestHex(password);
@@ -36,8 +35,12 @@ public class PassWord {
         }
     }
 
+    /**
+     * 判断密码相等
+     * @param password
+     * @return
+     */
     public Boolean isEqual(String password) {
         return this.encryptionPassWord.password.equals(getEncryptionPassWord(password));
     }
-
 }
