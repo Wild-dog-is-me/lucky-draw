@@ -26,7 +26,7 @@ spring.datasource:
     #     可以支持PSCache（提升写入、查询效率）
     poolPreparedStatements: true
     #     配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
-    filters: stat,wall,log4j
+    filters: stat,wall
     #     保持长连接
     keepAlive: true
     maxPoolPreparedStatementPerConnectionSize: 20
@@ -35,6 +35,6 @@ spring.datasource:
 
 mybatis-plus:
   map-underscore-to-camel-case: true
-#  type-enums-package: org.dog.ldbase.enums,org.dog.botqq.enums,org.dog.lucky.enums
+  type-enums-package: org.dog.ldbase.enums,org.dog.botqq.enums,org.dog.lucky.enums
 
 mybatis-plus.configuration.log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

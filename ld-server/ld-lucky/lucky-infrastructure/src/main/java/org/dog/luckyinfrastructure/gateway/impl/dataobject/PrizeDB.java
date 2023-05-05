@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -32,7 +33,7 @@ public class PrizeDB implements Serializable {
     /**
      * 金额
      */
-    private Integer money;
+    private BigDecimal money;
 
     /**
      * 类型（1：商品，2：金钱）

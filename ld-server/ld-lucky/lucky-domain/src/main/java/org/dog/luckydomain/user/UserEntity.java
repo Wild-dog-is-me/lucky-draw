@@ -15,13 +15,6 @@ import java.time.LocalDateTime;
 @Data
 public class UserEntity {
 
-      /*
-    这是个领域对象，所以该对象包含了，用户该有的基本功能
-    1、校验用户名
-    2、加密密码
-    3、判断密码是否相等
-     */
-
     /**
      *
      */

@@ -8,6 +8,7 @@ ld:
   mysql-port: 3306
   nacos-port: 8848
   redis-port: 6379
+  druid_password: root
 #  rocketmq-port:
 #nacos
 nacos:
