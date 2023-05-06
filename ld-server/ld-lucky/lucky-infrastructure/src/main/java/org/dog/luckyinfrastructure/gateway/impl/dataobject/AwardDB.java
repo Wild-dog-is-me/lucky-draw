@@ -39,7 +39,7 @@ public class AwardDB implements Serializable {
      */
     private Double probability;
 
-    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     /**

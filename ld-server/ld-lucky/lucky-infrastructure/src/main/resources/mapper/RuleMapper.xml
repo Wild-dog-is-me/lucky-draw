@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dog.luckyinfrastructure.gateway.impl.mapper.RuleMapper">
+
+    <resultMap id="BaseResultMap" type="org.dog.luckyinfrastructure.gateway.impl.dataobject.RuleDB">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="ruleName" column="rule_name" jdbcType="VARCHAR"/>
+        <result property="maxJoinNumber" column="max_join_number" jdbcType="INTEGER"/>
+        <result property="maxWinningNumber" column="max_winning_number" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="creator" column="creator" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updater" column="updater" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,rule_name,max_join_number,
+        max_winning_number,create_time,creator,
+        update_time,updater
+    </sql>
+
+    <select id="page" resultType="org.dog.luckyinfrastructure.gateway.impl.dataobject.RuleDB">
+        select * from bld_rule a
+        <where>
+            <if test="query.id != null">
+                and a.id = #{query.id}
+            </if>
+            <if test="query.ids != null and query.ids.size() != 0">
+                and a.id in
+                <foreach collection="query.ids" separator="," open="(" close=")" item="id">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="query.ruleName != null and query.ruleName != ''">
+                and a.rule_name like concat('%',#{query.ruleName},'%')
+            </if>
+        </where>
+    </select>
+</mapper>

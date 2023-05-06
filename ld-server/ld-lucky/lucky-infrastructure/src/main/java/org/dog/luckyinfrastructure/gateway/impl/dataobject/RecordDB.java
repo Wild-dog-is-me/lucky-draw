@@ -44,7 +44,7 @@ public class RecordDB implements Serializable {
      */
     private Integer state;
 
-    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     /**

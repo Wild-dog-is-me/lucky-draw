@@ -1,7 +1,10 @@
 package org.dog.luckyinfrastructure.gateway.impl.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
+import org.dog.luckyclient.dto.query.RuleListByParamQuery;
 import org.dog.luckyinfrastructure.gateway.impl.dataobject.RuleDB;
 
 /**
@@ -13,6 +16,7 @@ import org.dog.luckyinfrastructure.gateway.impl.dataobject.RuleDB;
 @Mapper
 public interface RuleMapper extends BaseMapper<RuleDB> {
 
+    IPage<RuleDB> page(Page<RuleDB> ruleDBPage, RuleListByParamQuery query);
 }
 
 

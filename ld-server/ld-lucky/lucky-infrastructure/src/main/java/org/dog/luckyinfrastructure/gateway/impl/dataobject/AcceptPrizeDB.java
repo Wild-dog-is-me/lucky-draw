@@ -34,7 +34,7 @@ public class AcceptPrizeDB implements Serializable {
      */
     private String address;
 
-    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     /**

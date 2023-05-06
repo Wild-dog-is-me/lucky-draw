@@ -39,7 +39,7 @@ public class UserDB implements Serializable {
      */
     private String phone;
 
-    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     /**

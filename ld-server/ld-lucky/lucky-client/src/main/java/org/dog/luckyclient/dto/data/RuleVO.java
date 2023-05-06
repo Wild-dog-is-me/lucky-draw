@@ -1,22 +1,19 @@
-package org.dog.luckyinfrastructure.gateway.impl.dataobject;
+package org.dog.luckyclient.dto.data;
 
-import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- *
- * @TableName bld_rule
+ * @Author: Odin
+ * @Date: 2023/5/6 10:06
+ * @Description:
  */
-@TableName(value ="bld_rule")
 @Data
-public class RuleDB implements Serializable {
+public class RuleVO {
     /**
      *
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -34,7 +31,9 @@ public class RuleDB implements Serializable {
      */
     private Integer maxWinningNumber;
 
-    @TableField(fill = FieldFill.INSERT)
+    /**
+     *
+     */
     private LocalDateTime createTime;
 
     /**
@@ -45,14 +44,8 @@ public class RuleDB implements Serializable {
     /**
      *
      */
-    @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
-    /**
-     *
-     */
     private String updater;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }
+

@@ -40,7 +40,7 @@ public class PrizeDB implements Serializable {
      */
     private Integer type;
 
-    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     /**
