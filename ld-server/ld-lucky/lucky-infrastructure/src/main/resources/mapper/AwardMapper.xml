@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dog.luckyinfrastructure.gateway.impl.mapper.AwardMapper">
+    <resultMap id="BaseResultMap" type="org.dog.luckyinfrastructure.gateway.impl.dataobject.AwardDB">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="prizeId" column="prize_id" jdbcType="BIGINT"/>
+        <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="awardName" column="award_name" jdbcType="VARCHAR"/>
+        <result property="probability" column="probability" jdbcType="DOUBLE"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="creator" column="creator" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updater" column="updater" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        prize_id,
+        number,
+        award_name,
+        probability,
+        create_time,
+        creator,
+        update_time,
+        updater
+    </sql>
+
+    <select id="page" resultMap="BaseResultMap">
+        select
+        a.*,
+        c.prize_name
+        from bld_award a
+        left join bld_activity b on a.activity_id = b.id
+        left join bld_prize c on c.id = a.prize_id
+        <where>
+            <if test="query.id != null">
+                and a.id = #{query.id}
+            </if>
+            <if test="query.activityId != null">
+                and a.activity_id = #{query.activityId}
+            </if>
+            <if test="query.activityName != null and query.activityName != ''">
+                and b.activity_name like concat('%', #{query.activityName}, '%')
+            </if>
+            <if test="query.awardName != null and query.awardName != ''">
+                and a.award_name like concat('%', #{query.awardName}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>

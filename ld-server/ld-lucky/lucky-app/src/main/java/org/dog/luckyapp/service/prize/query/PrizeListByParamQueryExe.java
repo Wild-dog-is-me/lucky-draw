@@ -1,4 +1,4 @@
-package org.dog.luckyapp.service.prize.command;
+package org.dog.luckyapp.service.prize.query;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.AllArgsConstructor;
