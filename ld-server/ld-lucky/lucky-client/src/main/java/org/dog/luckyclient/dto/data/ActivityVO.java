@@ -1,23 +1,19 @@
-package org.dog.luckyinfrastructure.gateway.impl.dataobject;
+package org.dog.luckyclient.dto.data;
 
-import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
- *
- * @TableName bld_activity
+ * @Author: Odin
+ * @Date: 2023/5/7 22:02
+ * @Description:
  */
-@TableName(value ="bld_activity")
 @Data
-public class ActivityDB implements Serializable {
+public class ActivityVO {
     /**
      *
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -41,9 +37,14 @@ public class ActivityDB implements Serializable {
     private String describe;
 
     /**
+     * 0,未开始，1，进行中，2已结束
+     */
+    private Integer status;
+
+
+    /**
      *
      */
-    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     /**
@@ -54,14 +55,10 @@ public class ActivityDB implements Serializable {
     /**
      *
      */
-    @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     /**
      *
      */
     private String updater;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }
