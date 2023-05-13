@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dog.luckyinfrastructure.gateway.impl.mapper.ActivityRuleMapper">
+
+    <resultMap id="BaseResultMap" type="org.dog.luckyinfrastructure.gateway.impl.dataobject.ActivityRuleDB">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="activityId" column="activity_id" jdbcType="BIGINT"/>
+        <result property="ruleId" column="rule_id" jdbcType="BIGINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="creator" column="creator" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updater" column="updater" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,activity_id,rule_id,
+        create_time,creator,update_time,
+        updater
+    </sql>
+
+    <select id="list" resultMap="BaseResultMap">
+        select * from bld_activity_rule a
+        <where>
+            <if test="activityId != null">
+                and a.activity_id = #{activityId}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByActivityId">
+        delete
+        from bld_activity_rule a
+        where a.activity_id = #{activityId}
+    </delete>
+
+</mapper>

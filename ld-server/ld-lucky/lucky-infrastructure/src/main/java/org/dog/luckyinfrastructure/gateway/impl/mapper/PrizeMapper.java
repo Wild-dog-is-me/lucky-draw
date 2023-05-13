@@ -18,6 +18,8 @@ import org.dog.luckyinfrastructure.gateway.impl.dataobject.PrizeDB;
 public interface PrizeMapper extends BaseMapper<PrizeDB> {
 
     IPage<PrizeDB> page(@Param("page") Page<PrizeDB> prizeDBPage, @Param("query") PrizeListByParamQuery query);
+
+    int deductionInventory(@Param("prizeId") Long prizeId, @Param("number") Integer number);
 }
 
 

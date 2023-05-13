@@ -29,4 +29,6 @@ public interface PrizeGateway {
         return prizeEntity;
     }
 
+    int deductionInventory(Long prizeId, Integer number);
+
 }

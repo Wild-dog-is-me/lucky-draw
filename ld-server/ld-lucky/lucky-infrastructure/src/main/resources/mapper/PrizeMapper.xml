@@ -21,6 +21,7 @@
         money,type,create_time,
         cretor,update_time,updater
     </sql>
+
     <select id="page" resultType="org.dog.luckyinfrastructure.gateway.impl.dataobject.PrizeDB">
         select * from bld_prize  a
         <where>
@@ -36,5 +37,10 @@
         </where>
     </select>
 
+    <update id="deductionInventory">
+        update bld_prize set inventory = inventory - #{number}
+        where id = #{prizeId}
+          and (inventory - #{number}) >= 0
+    </update>
 
 </mapper>

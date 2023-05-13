@@ -64,8 +64,6 @@ public class AwardEntity {
 
     /**
      * 判断该奖项是否是一个奖品，也即该奖项是否中奖
-     *
-     * @return
      */
     public Boolean isPrize() {
         return !"0".equals(this.prizeId.toString());

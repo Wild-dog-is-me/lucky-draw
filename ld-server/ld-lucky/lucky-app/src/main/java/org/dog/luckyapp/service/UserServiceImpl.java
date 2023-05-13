@@ -1,16 +1,15 @@
 package org.dog.luckyapp.service;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dog.config.exception.LdException;
 import org.dog.config.util.JwtUtil;
-import org.dog.luckyapp.service.user.command.UserRegisterCmdExe;
-import org.dog.luckyapp.service.user.command.UserUpdateCmdExe;
-import org.dog.luckyapp.service.user.query.UserListByParamQueryExe;
-import org.dog.luckyapp.service.user.query.UserLoginQueryExe;
+import org.dog.luckyapp.user.command.UserRegisterCmdExe;
+import org.dog.luckyapp.user.command.UserUpdateCmdExe;
+import org.dog.luckyapp.user.query.UserListByParamQueryExe;
+import org.dog.luckyapp.user.query.UserLoginQueryExe;
 import org.dog.luckyclient.api.IUserService;
 import org.dog.luckyclient.dto.cmd.UserRegisterCmd;
 import org.dog.luckyclient.dto.cmd.UserUpdateCmd;

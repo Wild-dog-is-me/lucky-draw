@@ -11,7 +11,7 @@ import java.util.List;
  * @Description:
  */
 @Data
-public class   RuleListByParamQuery extends PageQuery {
+public class RuleListByParamQuery extends PageQuery {
 
     private Long id;
 

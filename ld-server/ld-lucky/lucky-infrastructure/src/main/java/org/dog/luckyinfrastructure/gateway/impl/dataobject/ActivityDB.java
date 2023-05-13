@@ -2,6 +2,7 @@ package org.dog.luckyinfrastructure.gateway.impl.dataobject;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
+import lombok.Getter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.util.Date;
  */
 @TableName(value ="bld_activity")
 @Data
+@Getter
 public class ActivityDB implements Serializable {
     /**
      *
@@ -38,6 +40,7 @@ public class ActivityDB implements Serializable {
     /**
      * 描述
      */
+    @TableField("`describe`")
     private String describe;
 
     /**

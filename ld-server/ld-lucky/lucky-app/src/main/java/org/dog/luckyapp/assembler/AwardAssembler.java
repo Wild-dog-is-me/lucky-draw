@@ -19,6 +19,7 @@ public class AwardAssembler {
     public static AwardEntity toAddEntity(AwardAddCmd cmd) {
         AwardEntity awardEntity = new AwardEntity();
         awardEntity.setPrizeId(cmd.getPrizeId());
+        awardEntity.setActivityId(cmd.getActivityId());
         awardEntity.setNumber(new AwardNumber(cmd.getNumber()));
         awardEntity.setAwardName(cmd.getAwardName());
         awardEntity.setProbability(cmd.getProbability());

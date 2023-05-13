@@ -34,6 +34,7 @@ public class ActivityGatewayImpl implements ActivityGateway {
     @Override
     public ActivityEntity save(ActivityEntity entity) {
         if (Objects.isNull(entity.getId())) {
+            log.error("========>{}", entity);
             return addActivity(entity);
         }
         return updateActivity(entity);
@@ -48,7 +49,7 @@ public class ActivityGatewayImpl implements ActivityGateway {
 
     private ActivityEntity addActivity(ActivityEntity entity) {
         ActivityDB activityDB = ActivityConvertor.toActivityDB(entity);
-        AssertUtil.isTrue(activityMapper.updateById(activityDB) <= 0,
+        AssertUtil.isTrue(activityMapper.insert(activityDB) <= 0,
                 LdExceptionEnum.UPDATE_ERROR.getDescription());
         return ActivityConvertor.toEntity(activityDB);
     }

@@ -46,7 +46,20 @@ public class UserGatewayImpl implements UserGateway {
     }
 
     private UserEntity addUser(UserEntity entity) {
-        UserDB userDB = UserConvertor.toUserDB(entity);
+        UserDB userDB = new UserDB();
+
+        userDB.setId(entity.getId());
+        userDB.setUsername(entity.getUsername().getUsername());
+        if (Objects.nonNull(entity.getPassword())){
+            userDB.setPassword(entity.getPassword().getEncryptionPassWord().getPassword());
+        }
+        userDB.setName(entity.getName());
+        userDB.setPhone(entity.getPhone());
+        userDB.setCreateTime(entity.getCreateTime());
+        userDB.setCreator(entity.getUsername().getUsername());
+        userDB.setUpdateTime(entity.getUpdateTime());
+        userDB.setUpdater(entity.getUsername().getUsername());
+
         int res = userMapper.insert(userDB);
         if (res <= 0) {
             throw new SysException("注册失败");
