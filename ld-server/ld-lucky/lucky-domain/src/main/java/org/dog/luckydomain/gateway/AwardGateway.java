@@ -17,4 +17,6 @@ public interface AwardGateway {
     AwardEntity save(AwardEntity entity);
 
     IPage<AwardEntity> page(AwardListByParamQuery query);
+
+    int deductionAwardNumber(Long awardId, Integer number);
 }

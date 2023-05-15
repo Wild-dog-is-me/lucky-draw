@@ -4,13 +4,18 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dog.config.util.SecurityUtil;
 import org.dog.luckyapp.activity.cmd.ActivityAddCmdExe;
 import org.dog.luckyapp.activity.cmd.ActivityUpdateCmdExe;
+import org.dog.luckyapp.activity.cmd.DrawExe;
 import org.dog.luckyapp.activity.query.ActivityListByParamQueryExe;
+import org.dog.luckyclient.api.IActivityConfigService;
 import org.dog.luckyclient.api.IActivityService;
 import org.dog.luckyclient.dto.cmd.ActivityAddCmd;
 import org.dog.luckyclient.dto.cmd.ActivityUpdateCmd;
+import org.dog.luckyclient.dto.data.ActivityConfigVO;
 import org.dog.luckyclient.dto.data.ActivityVO;
+import org.dog.luckyclient.dto.data.DrawResultVO;
 import org.dog.luckyclient.dto.query.ActivityListByParamQuery;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +33,9 @@ public class ActivityServiceImpl implements IActivityService {
     private final ActivityAddCmdExe activityAddCmdExe;
     private final ActivityUpdateCmdExe activityUpdateCmdExe;
     private final ActivityListByParamQueryExe activityListByParamQueryExe;
+    private final DrawExe drawExe;
+
+    private final IActivityConfigService activityConfigService;
 
     @Override
     public ActivityVO add(ActivityAddCmd cmd) {
@@ -53,6 +61,14 @@ public class ActivityServiceImpl implements IActivityService {
             return null;
         }
         return page.getRecords().get(0);
+    }
+
+    @Override
+    public DrawResultVO draw(Long activityId) {
+        log.info("用户{},开始抽奖", SecurityUtil.getName());
+        ActivityConfigVO activityConfigVO = activityConfigService.one(activityId);
+        drawExe.execute(activityConfigVO);
+        return null;
     }
 
 }

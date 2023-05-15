@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.dog.luckyclient.dto.cmd.ActivityAddCmd;
 import org.dog.luckyclient.dto.cmd.ActivityUpdateCmd;
 import org.dog.luckyclient.dto.data.ActivityVO;
+import org.dog.luckyclient.dto.data.DrawResultVO;
 import org.dog.luckyclient.dto.query.ActivityListByParamQuery;
 
 /**
@@ -21,4 +22,5 @@ public interface IActivityService {
 
     ActivityVO one(Long id);
 
+    DrawResultVO draw(Long activityId);
 }

@@ -27,6 +27,13 @@
         updater
     </sql>
 
+    <update id="deductionAwardNumber">
+        update bld_award a
+        set a.number = a.number - #{number}
+        where a.id = #{awardId}
+          and (a.number - #{number}) >= 0
+    </update>
+
     <select id="page" resultMap="BaseResultMap">
         select
         a.*,

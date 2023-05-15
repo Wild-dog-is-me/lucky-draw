@@ -3,6 +3,7 @@ package org.dog.luckyclient.api;
 import org.dog.luckyclient.dto.cmd.ActivityConfigAddCmd;
 import org.dog.luckyclient.dto.cmd.ActivityConfigUpdateCmd;
 import org.dog.luckyclient.dto.cmd.ActivityUpdateCmd;
+import org.dog.luckyclient.dto.data.ActivityConfigCopyVO;
 import org.dog.luckyclient.dto.data.ActivityConfigVO;
 
 /**
@@ -18,5 +19,7 @@ public interface IActivityConfigService {
     ActivityConfigVO update(ActivityConfigUpdateCmd cmd);
 
     ActivityConfigVO one(Long id);
+
+    ActivityConfigCopyVO copy(Long id);
 
 }

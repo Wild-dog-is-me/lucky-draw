@@ -12,6 +12,8 @@ import org.dog.luckyapp.activity.query.ActivityListByParamQueryExe;
 import org.dog.luckyapp.activityrule.cmd.ActivityRuleAddCmdExe;
 import org.dog.luckyapp.activityrule.cmd.ActivityRuleDeleteExe;
 import org.dog.luckyapp.activityrule.query.ActivityRuleListByParamQueryExe;
+import org.dog.luckyapp.assembler.ActivityAssembler;
+import org.dog.luckyapp.assembler.AwardAssembler;
 import org.dog.luckyapp.award.command.AwardAddCmdExe;
 import org.dog.luckyapp.award.command.AwardUpdateCmdExe;
 import org.dog.luckyapp.award.query.AwardListByParamQueryExe;
@@ -67,7 +69,7 @@ public class ActivityConfigServiceImpl implements IActivityConfigService {
         List<AwardVO> awardVOList = addAward(activityVO, cmd.getAwardAddCmdList());
 
         ActivityConfigVO activityConfigVO = new ActivityConfigVO();
-        log.error("[activityVO]============>{}",activityVO);
+        log.error("[activityVO]============>{}", activityVO);
         activityConfigVO.setActivityVO(activityVO);
         activityConfigVO.setRuleVOList(ruleVOList);
         activityConfigVO.setAwardVOList(awardVOList);
@@ -143,6 +145,21 @@ public class ActivityConfigServiceImpl implements IActivityConfigService {
         return activityConfigVO;
     }
 
+    @Override
+    public ActivityConfigCopyVO copy(Long id) {
+        ActivityConfigCopyVO activityConfigCopyVO = new ActivityConfigCopyVO();
+
+        ActivityConfigVO activityConfigVO = one(id);
+
+        activityConfigCopyVO.setActivityAddCmd(ActivityAssembler.toActivityAddCmd(activityConfigVO.getActivityVO()));
+        activityConfigCopyVO.setRuleIdList(activityConfigVO.getRuleVOList().stream().map(RuleVO::getId).collect(Collectors.toList()));
+        activityConfigCopyVO.setAwardAddCmdList(
+                new Page<AwardVO>().setRecords(activityConfigVO.getAwardVOList()).convert(AwardAssembler::toAwardAddCmd).getRecords()
+        );
+
+        return activityConfigCopyVO;
+    }
+
     private List<RuleVO> addActivityRule(ActivityVO activityVO, List<Long> ruleIdList) {
 
         List<ActivityRuleAddCmd> cmdList = new ArrayList<>();
@@ -158,7 +175,7 @@ public class ActivityConfigServiceImpl implements IActivityConfigService {
     }
 
 
-    private List<RuleVO> getRuleVOList(List<Long> ruleIdList){
+    private List<RuleVO> getRuleVOList(List<Long> ruleIdList) {
         RuleListByParamQuery query = new RuleListByParamQuery();
         query.setIds(ruleIdList);
         query.setPageSize(1000);

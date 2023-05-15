@@ -18,6 +18,9 @@ import org.dog.luckyinfrastructure.gateway.impl.dataobject.AwardDB;
 public interface AwardMapper extends BaseMapper<AwardDB> {
 
     IPage<AwardDB> page(@Param("awardDBPage") Page<AwardDB> awardDBPage, @Param("query") AwardListByParamQuery query);
+
+    int deductionAwardNumber(@Param("awardId") Long awardId, @Param("number") Integer number);
+
 }
 
 
