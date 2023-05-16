@@ -18,6 +18,8 @@ import java.io.FileNotFoundException;
 @Slf4j
 public class FileLoad {
 
+
+
     public static String read(String fileName) {
         String val = "";
         try {

@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dog.config.util.SecurityUtil;
 import org.dog.luckyapp.activity.cmd.ActivityAddCmdExe;
 import org.dog.luckyapp.activity.cmd.ActivityUpdateCmdExe;
-import org.dog.luckyapp.activity.cmd.DrawExe;
+import org.dog.luckyapp.activity.cmd.RedisDeductionAwardNumberDrawExe;
 import org.dog.luckyapp.activity.query.ActivityListByParamQueryExe;
 import org.dog.luckyclient.api.IActivityConfigService;
 import org.dog.luckyclient.api.IActivityService;
@@ -33,7 +33,7 @@ public class ActivityServiceImpl implements IActivityService {
     private final ActivityAddCmdExe activityAddCmdExe;
     private final ActivityUpdateCmdExe activityUpdateCmdExe;
     private final ActivityListByParamQueryExe activityListByParamQueryExe;
-    private final DrawExe drawExe;
+    private final RedisDeductionAwardNumberDrawExe drawExe;
 
     private final IActivityConfigService activityConfigService;
 

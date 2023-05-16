@@ -17,6 +17,7 @@ import org.dog.luckyapp.assembler.AwardAssembler;
 import org.dog.luckyapp.award.command.AwardAddCmdExe;
 import org.dog.luckyapp.award.command.AwardUpdateCmdExe;
 import org.dog.luckyapp.award.query.AwardListByParamQueryExe;
+import org.dog.luckyapp.listener.event.ActivityCreateEvent;
 import org.dog.luckyapp.rule.query.RuleListByParamQueryExe;
 import org.dog.luckyclient.api.IActivityConfigService;
 import org.dog.luckyclient.dto.cmd.*;
@@ -57,6 +58,7 @@ public class ActivityConfigServiceImpl implements IActivityConfigService {
     private final ActivityRuleListByParamQueryExe activityRuleListByParamQueryExe;
     private final AwardListByParamQueryExe awardListByParamQueryExe;
 
+    private final ApplicationEventMulticaster applicationMulticaster;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -69,10 +71,11 @@ public class ActivityConfigServiceImpl implements IActivityConfigService {
         List<AwardVO> awardVOList = addAward(activityVO, cmd.getAwardAddCmdList());
 
         ActivityConfigVO activityConfigVO = new ActivityConfigVO();
-        log.error("[activityVO]============>{}", activityVO);
         activityConfigVO.setActivityVO(activityVO);
         activityConfigVO.setRuleVOList(ruleVOList);
         activityConfigVO.setAwardVOList(awardVOList);
+        // 发送活动创建事件
+        applicationMulticaster.multicastEvent(new ActivityCreateEvent("", activityConfigVO));
 
         return activityConfigVO;
     }
