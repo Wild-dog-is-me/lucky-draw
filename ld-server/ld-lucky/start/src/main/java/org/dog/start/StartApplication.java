@@ -15,7 +15,6 @@ public class StartApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(StartApplication.class, args);
-        System.out.println(FileLoad.read("lua/stock_rollback.lua"));
     }
 
 }

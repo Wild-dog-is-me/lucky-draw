@@ -3,13 +3,18 @@ package org.dog.luckyadapter.web;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dog.common.annotation.ResponseResult;
+import org.dog.luckyapp.activity.cmd.RedisDeductionAwardNumberDrawExe;
+import org.dog.luckyapp.context.ActivityDrawContext;
+import org.dog.luckyapp.listener.AwardInventoryToRedisApplicationListener;
 import org.dog.luckyapp.listener.event.ActivityCreateEvent;
+import org.dog.luckyapp.mq.product.ActivityDrawMessageProducer;
 import org.dog.luckyclient.dto.data.ActivityConfigVO;
 import org.dog.luckyclient.dto.data.ActivityVO;
 import org.dog.luckyclient.dto.data.AwardVO;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,21 +31,28 @@ import java.util.List;
 @RequestMapping("/v1/test")
 public class TestController {
 
-    private final ApplicationEventMulticaster applicationMulticaster;
+    private final ApplicationEventMulticaster applicationEventMulticaster;
 
-    @GetMapping("/testCreateEventTest")
-    public void testCreateEventTest() {
+    private final RedisDeductionAwardNumberDrawExe drawExe;
+
+    private final ActivityDrawMessageProducer activityDrawMessageProducer;
+
+//    private final IRecordServer recordServer;
+
+    @GetMapping("/activityCreateEventTest")
+    public void activityCreateEventTest() {
+
         ActivityConfigVO activityConfigVO = new ActivityConfigVO();
 
         ActivityVO activityVO = new ActivityVO();
-        activityVO.setId(11L);
+        activityVO.setId(1L);
         activityConfigVO.setActivityVO(activityVO);
 
 
         List<AwardVO> awardVOList = new ArrayList<>();
         AwardVO awardVO = new AwardVO();
         awardVO.setAwardName("测试奖项");
-        awardVO.setId(35L);
+        awardVO.setId(100L);
         awardVO.setPrizeId(1L);
         awardVO.setNumber(200);
         awardVOList.add(awardVO);
@@ -54,8 +66,30 @@ public class TestController {
         awardVOList.add(awardVO2);
         activityConfigVO.setAwardVOList(awardVOList);
         // 发送活动创建事件
-        applicationMulticaster.multicastEvent(new ActivityCreateEvent("", activityConfigVO));
-
+        applicationEventMulticaster.multicastEvent(new ActivityCreateEvent("", activityConfigVO));
     }
+
+
+    @GetMapping("/invokeStockDeductionLuaTest")
+    public Integer invokeStockDeductionLuaTest() {
+        return drawExe.invokeStockDeductionLua(
+                AwardInventoryToRedisApplicationListener.getKey(1L, 100L));
+    }
+
+    @GetMapping("/invokeStockRollbackLuaTest")
+    public Integer invokeStockRollbackLuaTest() {
+        return drawExe.invokeStockRollbackLua(
+                AwardInventoryToRedisApplicationListener.getKey(1L, 100L));
+    }
+
+    @GetMapping("/activityDrawMessageProducerTest")
+    public Boolean activityDrawMessageProducerTest() {
+        return activityDrawMessageProducer.sendTest(new ActivityDrawContext());
+    }
+//
+//    @GetMapping("/exchangeMoneyTest")
+//    public Boolean exchangeMoneyTest(@RequestParam("recordId") Long recordId) {
+//        return recordServer.exchangeMoney(recordId);
+//    }
 
 }

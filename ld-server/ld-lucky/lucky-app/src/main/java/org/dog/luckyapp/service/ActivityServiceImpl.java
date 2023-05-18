@@ -9,6 +9,7 @@ import org.dog.luckyapp.activity.cmd.ActivityAddCmdExe;
 import org.dog.luckyapp.activity.cmd.ActivityUpdateCmdExe;
 import org.dog.luckyapp.activity.cmd.RedisDeductionAwardNumberDrawExe;
 import org.dog.luckyapp.activity.query.ActivityListByParamQueryExe;
+import org.dog.luckyapp.context.ActivityDrawContext;
 import org.dog.luckyclient.api.IActivityConfigService;
 import org.dog.luckyclient.api.IActivityService;
 import org.dog.luckyclient.dto.cmd.ActivityAddCmd;
@@ -66,9 +67,9 @@ public class ActivityServiceImpl implements IActivityService {
     @Override
     public DrawResultVO draw(Long activityId) {
         log.info("用户{},开始抽奖", SecurityUtil.getName());
-        ActivityConfigVO activityConfigVO = activityConfigService.one(activityId);
-        drawExe.execute(activityConfigVO);
-        return null;
+        ActivityDrawContext context = new ActivityDrawContext()
+                .setActivityConfigVO(activityConfigService.one(activityId));
+        return drawExe.execute(context);
     }
 
 }

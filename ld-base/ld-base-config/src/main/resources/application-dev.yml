@@ -9,7 +9,9 @@ ld:
   nacos-port: 8848
   redis-port: 6379
   druid_password: root
-#  rocketmq-port:
+  mq-host: 49.234.28.122
+  mq-port: 9876
+
 #nacos
 nacos:
   #dev
@@ -20,3 +22,6 @@ DB_HOST: ${ld.host}:${ld.mysql-port}
 DB_NAME: raffle
 DB_USERNAME: root
 DB_PASSWORD: root
+
+MQ_NAME_SERVER: ${ld.mq-host}:${ld.mq-port}
+MQ_GROUP: lucky_draw

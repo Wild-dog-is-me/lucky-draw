@@ -27,7 +27,6 @@ public class AwardAddCmdExe {
     private final AwardGateway awardGateway;
 
     private final PrizeGateway prizeGateway;
-
     public AwardVO execute(AwardAddCmd cmd) {
         AssertUtil.isTrue(Objects.isNull(cmd.getActivityId()), "奖项活动id不为空！");
         AwardEntity entity = awardGateway.save(AwardAssembler.toAddEntity(cmd));

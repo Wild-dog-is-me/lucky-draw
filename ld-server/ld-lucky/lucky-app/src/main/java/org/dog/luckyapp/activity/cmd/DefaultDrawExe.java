@@ -4,8 +4,11 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.util.RandomUtil;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.dog.config.exception.LdException;
+import org.dog.config.util.AssertUtil;
+import org.dog.luckyapp.context.ActivityDrawContext;
 import org.dog.luckyclient.dto.data.*;
 import org.dog.luckydomain.activity.ActivityEntity;
 import org.dog.luckydomain.activity.ActivityStatusEnum;
@@ -13,8 +16,8 @@ import org.dog.luckydomain.activity.ActivityTime;
 import org.dog.luckydomain.award.AwardEntity;
 import org.dog.luckydomain.gateway.AwardGateway;
 import org.dog.luckydomain.gateway.PrizeGateway;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,20 +30,42 @@ import java.util.stream.Collectors;
  */
 
 @Slf4j
+@Getter
 @Component
 @AllArgsConstructor
-public class DefaultDrawExe extends BaseDrawExe{
+public class DefaultDrawExe extends BaseDrawExe {
 
     private final AwardGateway awardGateway;
     private final PrizeGateway prizeGateway;
+    private final TransactionTemplate transactionTemplate;
 
-    protected void addAcceptPrize(Long id, AwardEntity awardEntity) {
-
+    @Override
+    protected Boolean drawBefore(ActivityDrawContext context) {
+        // 编程式事务
+        return transactionTemplate.execute(status -> {
+            Boolean seccess = Boolean.TRUE;
+            int update = 0;
+            try {
+                // 扣减库存
+                update = awardGateway.deductionAwardNumber(context.getAwardVO().getId(), 1);
+                AssertUtil.isTrue(update != 1, "扣减库存失败！");
+                addRecord(context);
+            } catch (Exception e) {
+                //错误处理
+                status.setRollbackOnly();
+                if (update > 0){
+                    // 回退库存
+                    awardGateway.deductionAwardNumber(context.getAwardVO().getId(), -1);
+                }
+                log.error("扣减库存和插入记录出错", e);
+                seccess = Boolean.FALSE;
+            }
+            return seccess;
+        });
     }
 
-    protected int deductionAwardNumber(Long awardId, Integer number) {
+    public void addRecord(ActivityDrawContext context) {
 
-        return awardGateway.deductionAwardNumber(awardId, number);
     }
 
     protected DrawResultVO getDrawResultVO(AwardEntity awardEntity) {
@@ -65,7 +90,6 @@ public class DefaultDrawExe extends BaseDrawExe{
         return awardVOList.stream()
                 .filter(item -> item.getNumber() > 0 || "0".equals(item.getPrizeId().toString()))
                 .collect(Collectors.toList());
-
     }
 
     protected void checkActivityRule(ActivityConfigVO activityConfigVO) {

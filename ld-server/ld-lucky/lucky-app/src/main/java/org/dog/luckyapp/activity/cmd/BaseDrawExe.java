@@ -1,6 +1,8 @@
 package org.dog.luckyapp.activity.cmd;
 
+import lombok.extern.slf4j.Slf4j;
 import org.dog.luckyapp.assembler.AwardAssembler;
+import org.dog.luckyapp.context.ActivityDrawContext;
 import org.dog.luckyclient.dto.data.ActivityConfigVO;
 import org.dog.luckyclient.dto.data.ActivityVO;
 import org.dog.luckyclient.dto.data.AwardVO;
@@ -14,39 +16,63 @@ import java.util.List;
  * @Date: 2023/5/15 14:16
  * @Description:
  */
+
+@Slf4j
 public abstract class BaseDrawExe {
 
-    public DrawResultVO execute(ActivityConfigVO activityConfigVO) {
+    /**
+     * 抽奖模板方法，流程不会改动
+     *
+     * @param context
+     * @return
+     */
+    public DrawResultVO execute(ActivityDrawContext context) {
 
         // 校验活动时间
-        checkActivityTime(activityConfigVO.getActivityVO());
+        checkActivityTime(context.getActivityConfigVO().getActivityVO());
         // 校验活动规则
-        checkActivityRule(activityConfigVO);
+        checkActivityRule(context.getActivityConfigVO());
         // 剔除奖项库存为空的奖项
-        List<AwardVO> awardVOList = removeAwardInventoryNull(activityConfigVO.getAwardVOList());
+        List<AwardVO> awardVOList = removeAwardInventoryNull(context.getActivityConfigVO().getAwardVOList());
         // 调用算法进行抽奖
-        AwardVO awardVO = getAward(awardVOList);
-        AwardEntity awardEntity = AwardAssembler.toAwardEntity(awardVO);
-        if (!awardEntity.isPrize()) {
-            return getDrawResultVO(awardEntity);
-        }
-        // 扣除奖项库存
-        if (defaultDeductionAwardNumber(activityConfigVO.getActivityVO().getId(), awardEntity.getId()) != 1) {
-            return getDefaultDrawResultVO(awardVOList);
-        }
-        // 插入获奖记录
-        addAcceptPrize(activityConfigVO.getActivityVO().getId(), awardEntity);
+        context.setAwardVO(getAward(awardVOList));
 
-        return getDrawResultVO(awardEntity);
+        context.setAwardEntity(AwardAssembler.toAwardEntity(context.getAwardVO()));
+
+        context.setIsWinTheLottery(context.getAwardEntity().isPrize());
+
+        if (Boolean.FALSE.equals(context.getIsWinTheLottery())) {
+            // 插入记录
+            addRecord(context);
+            return getDrawResultVO(context.getAwardEntity());
+        }
+
+        Boolean drawBefore = Boolean.TRUE;
+        try {
+            // 调用后续抽奖流程，流程内容自定义
+            drawBefore = drawBefore(context);
+        } catch (Exception e) {
+            drawBefore = Boolean.FALSE;
+            log.error("执行【drawBefore】方法出错,默认返回未中奖信息", e);
+        }
+        if (Boolean.FALSE.equals(drawBefore)) {
+            // 执行 drawBefore 出错，默认返回未中奖
+            DrawResultVO resultVO = getDefaultDrawResultVO(context.getActivityConfigVO().getAwardVOList());
+            AwardVO notAward = getNotAward(context.getActivityConfigVO().getAwardVOList());
+            context.setAwardVO(notAward);
+            context.setAwardEntity(AwardAssembler.toAwardEntity(notAward));
+            context.setIsWinTheLottery(Boolean.FALSE);
+            // 插入记录
+            addRecord(context);
+            return getDrawResultVO(context.getAwardEntity());
+        }
+
+        return getDrawResultVO(context.getAwardEntity());
     }
 
-    protected abstract void addAcceptPrize(Long id, AwardEntity awardEntity);
+    protected abstract void addRecord(ActivityDrawContext context);
 
-    protected Integer defaultDeductionAwardNumber(Long activityId, Long awardId){
-        return deductionAwardNumber(awardId, 1);
-    };
-
-    protected abstract int deductionAwardNumber(Long awardId, Integer number);
+    protected abstract Boolean drawBefore(ActivityDrawContext context);
 
     protected abstract DrawResultVO getDrawResultVO(AwardEntity awardEntity);
 

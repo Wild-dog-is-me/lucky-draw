@@ -1,3 +1,3 @@
 spring:
   profiles:
-    active: dev,nacos,redis,mybatisplus
+    active: dev,nacos,redis,mybatisplus,rocketmq
