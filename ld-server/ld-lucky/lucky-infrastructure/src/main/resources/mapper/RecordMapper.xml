@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dog.luckyinfrastructure.gateway.impl.mapper.RecordMapper">
+
+    <resultMap id="BaseResultMap" type="org.dog.luckyinfrastructure.gateway.impl.dataobject.RecordDB">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="activityId" column="activity_id" jdbcType="BIGINT"/>
+        <result property="awardId" column="award_id" jdbcType="BIGINT"/>
+        <result property="isWinning" column="is_winning" jdbcType="TINYINT"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="creator" column="creator" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updater" column="updater" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,activity_id,
+        award_id,is_winning,state,
+        create_time,creator,update_time,
+        updater
+    </sql>
+    <update id="updateStatus">
+        update bld_record a
+        set a.state = #{status}
+        where a.id = #{id}
+    </update>
+    <select id="page" resultType="org.dog.luckyinfrastructure.gateway.impl.dataobject.RecordDB">
+
+        select
+        a.*,
+        b.award_name,
+        c.prize_name,
+        c.type as prizeType
+        from bld_record a
+        left join bld_award b on a.award_id = b.id
+        left join bld_prize c on b.prize_id = c.id
+        <where>
+            <if test="query.recordId != null">
+                and a.id = #{query.recordId}
+            </if>
+            <if test="query.userId != null">
+                and a.user_id = #{query.userId}
+            </if>
+            <if test="query.activityId != null">
+                and a.activity_id = #{query.activityId}
+            </if>
+            <if test="query.winTheLottery != null">
+                and a.is_winning = #{query.winTheLottery}
+            </if>
+            <if test="query.status != null">
+                and a.state = #{query.status}
+            </if>
+        </where>
+
+    </select>
+    <select id="getPrizeMoneyByRecordId" resultType="java.math.BigDecimal">
+        SELECT c.money FROM bld_record a
+                                LEFT JOIN bld_award b ON a.award_id = b.id
+                                LEFT JOIN bld_prize c ON b.prize_id = c.id
+        WHERE c.type = 2
+          AND a.id = #{recordId}
+    </select>
+</mapper>

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 //@EnableFeignClients(basePackages = "org.dog.luckyclient.feign")
 @Configuration
 @EnableScheduling
+@ComponentScan("org.dog")
 @EnableTransactionManagement
 @ComponentScan("org.dog")
 @MapperScan(basePackages = "org.dog.luckyinfrastructure.gateway.impl.mapper.*")

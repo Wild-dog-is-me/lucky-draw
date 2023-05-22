@@ -1,23 +1,21 @@
-package org.dog.luckyinfrastructure.gateway.impl.dataobject;
+package org.dog.luckyclient.dto.data;
 
-import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
-import lombok.Getter;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- *
- * @TableName bld_record
+ * @Author: Odin
+ * @Date: 2023/5/21 00:08
+ * @Description:
  */
-@TableName(value ="bld_record")
+
 @Data
-public class RecordDB implements Serializable {
+public class RecordVO {
+
     /**
      *
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -37,14 +35,12 @@ public class RecordDB implements Serializable {
      */
     private Long awardId;
 
-    @TableField(exist = false)
     private String awardName;
 
-    @TableField(exist = false)
     private String prizeName;
 
-    @TableField(exist = false)
     private Integer prizeType;
+
 
     /**
      * 是否中奖：0未中奖，1中奖
@@ -59,7 +55,6 @@ public class RecordDB implements Serializable {
     /**
      *
      */
-    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     /**
@@ -70,14 +65,10 @@ public class RecordDB implements Serializable {
     /**
      *
      */
-    @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     /**
      *
      */
     private String updater;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

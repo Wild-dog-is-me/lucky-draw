@@ -28,6 +28,7 @@ public class ActivityDrawMessageProducer {
 
     private final RocketMQTemplate rocketMQTemplate;
 
+
     public Boolean send(ActivityDrawContext context) {
         final var activityDrawMessage = new ActivityDrawMessage()
                 .setUuid(IdUtil.simpleUUID())

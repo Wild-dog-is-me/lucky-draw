@@ -1,8 +1,14 @@
 package org.dog.luckyinfrastructure.gateway.impl.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.dog.luckyclient.dto.query.RecordListByParamQuery;
 import org.dog.luckyinfrastructure.gateway.impl.dataobject.RecordDB;
+
+import java.math.BigDecimal;
 
 /**
 * @author odin
@@ -12,6 +18,12 @@ import org.dog.luckyinfrastructure.gateway.impl.dataobject.RecordDB;
 */
 @Mapper
 public interface RecordMapper extends BaseMapper<RecordDB> {
+
+    IPage<RecordDB> page(@Param("recordDBPage") Page<RecordDB> recordDBPage, @Param("query") RecordListByParamQuery query);
+
+    Integer updateStatus(@Param("id") Long id, @Param("status") Integer status);
+
+    BigDecimal getPrizeMoneyByRecordId(@Param("recordId") Long recordId);
 
 }
 
