@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- *
  * @TableName bld_record
  */
 @TableName(value ="bld_record")

@@ -32,7 +32,7 @@ import java.util.Objects;
 
 @Slf4j
 @Component
-public class RedisDeductionAwardNumberDrawExe extends DefaultDrawExe {
+public class  RedisDeductionAwardNumberDrawExe extends DefaultDrawExe {
 
     private final RedisTemplate<String, Object> redisTemplate;
     private final ActivityDrawMessageProducer activityDrawMessageProducer;
@@ -45,38 +45,70 @@ public class RedisDeductionAwardNumberDrawExe extends DefaultDrawExe {
         RedisDeductionAwardNumberDrawExe.stockRollbackLua = FileLoad.read("lua/stock_rollback.lua");
     }
 
-    public RedisDeductionAwardNumberDrawExe(
-            RecordGateway recordGateway,
-            AwardGateway awardGateway,
-            PrizeGateway prizeGateway,
-            TransactionTemplate transactionTemplate,
-            RedisTemplate<String, Object> redisTemplate,
-            ActivityDrawMessageProducer activityDrawMessageProducer
-    ) {
 
+    public RedisDeductionAwardNumberDrawExe(RecordGateway recordGateway,
+                                            AwardGateway awardGateway,
+                                            PrizeGateway prizeGateway,
+                                            TransactionTemplate transactionTemplate,
+                                            ActivityDrawMessageProducer activityDrawMessageProducer,
+                                            RedisTemplate<String, Object> redisTemplate) {
         super(recordGateway, awardGateway, prizeGateway, transactionTemplate);
         this.redisTemplate = redisTemplate;
         this.activityDrawMessageProducer = activityDrawMessageProducer;
     }
 
 
+    @Override
+    protected Boolean drawBefore(ActivityDrawContext context) {
+        // 扣减 redis 库存
+        Integer deductionLua = invokeStockDeductionLua(AwardInventoryToRedisApplicationListener.getKey(
+                context.getAwardEntity().getActivityId(), context.getAwardVO().getId()));
+
+        if (deductionLua != 1) {
+            return Boolean.FALSE;
+        }
+
+        return super.getTransactionTemplate().execute(status -> {
+            Boolean success = Boolean.TRUE;
+            try {
+                // 插入不可见抽奖记录
+                context.setIsShow(Boolean.FALSE);
+
+                super.addRecord(context);
+                // 发送 MQ 消息
+                if (Boolean.FALSE.equals(activityDrawMessageProducer.send(context))) {
+                    throw new LdException("MQ发送消息失败！");
+                }
+            } catch (Exception e) {
+                //错误处理
+                status.setRollbackOnly();
+                invokeStockRollbackLua(AwardInventoryToRedisApplicationListener.getKey(
+                        context.getAwardEntity().getActivityId(), context.getAwardVO().getId()));
+                success = Boolean.FALSE;
+                log.error("扣减库存失败或发送MQ消息失败，", e);
+            }
+            return success;
+        });
+    }
+
     public Integer invokeStockDeductionLua(String key) {
         /**
-         * stockDeductionLua:lua脚本
-         * Long.class：返回执行后库存值的类型
+         * stockDeductionLua: lua 脚本
+         * Long.class: 返回执行后的库存值类型
          */
         RedisScript<Long> redisScript = new DefaultRedisScript<>(stockDeductionLua, Long.class);
 
         Long execute = redisTemplate.opsForValue().getOperations().execute(
                 redisScript,
-                List.of(key)
-        );
+                List.of(key));
 
         if (Objects.isNull(execute) || execute == -1) {
             return 0;
         }
+
         return 1;
     }
+
 
     public Integer invokeStockRollbackLua(String key) {
         /**
@@ -96,37 +128,36 @@ public class RedisDeductionAwardNumberDrawExe extends DefaultDrawExe {
         return 1;
     }
 
-    @Override
-    protected Boolean drawBefore(ActivityDrawContext context) {
-        // 扣减Redis库存
-        Integer deductionLua = invokeStockDeductionLua(AwardInventoryToRedisApplicationListener.getKey(
-                context.getAwardEntity().getActivityId(), context.getAwardVO().getId()
-        ));
-        if (deductionLua != 1) {
-            return Boolean.FALSE;
-        }
 
-        return super.getTransactionTemplate().execute(status -> {
-            Boolean success = Boolean.TRUE;
-            try {
-                // 插入不可见抽奖记录
-                context.setIsShow(Boolean.FALSE);
-                super.addRecord(context);
-                // 发送 MQ 消息
-                if (Boolean.FALSE.equals(activityDrawMessageProducer.send(context)
-                )) {
-                    throw new LdException("MQ发送消息失败");
-                }
-            } catch (Exception e) {
-                status.setRollbackOnly();
-                invokeStockRollbackLua(AwardInventoryToRedisApplicationListener.getKey(
-                        context.getAwardEntity().getActivityId(), context.getAwardVO().getId()
-                ));
-                success = Boolean.FALSE;
-                log.error("扣减库存失败或发送MQ消息失败", e);
+    /**
+     * MQ执行：扣除库存并修改不可见中奖记录状态
+     *
+     * @param context
+     * @return
+     */
+    public Boolean mqDeductionOfInventoryAndUpdateRecordStatus(ActivityDrawContext context) {
+        return deductionOfInventoryAndUpdateRecordStatus(context.getAwardVO().getId(), context.getRecordId());
+    }
+
+
+    /**
+     * 定时任务执行：扣除库存并修改不可见中奖记录状态
+     * <p>
+     * 定时扫描用户不可见状态的中奖记录，然后对比当前时间和数据创建时间，
+     * 发现两者相隔 10 分钟，那么，定时任务就可以把这个记录查询出来，再来执行一边，方案三消费者流程
+     */
+    public void ScheduledExecuteDeductionOfInventoryAndUpdateRecordStatus() {
+        LocalDateTime now = LocalDateTime.now().plusMinutes(-5);
+        final var query = new RecordListByParamQuery();
+        query.setStatus(RecordStatusEnum.STATUE_0.getValue());
+        query.setPageSize(100);
+        IPage<RecordEntity> page = super.getRecordGateway().page(query);
+        for (RecordEntity record : page.getRecords()) {
+            if (record.getCreateTime().isAfter(now)){
+                continue;
             }
-            return success;
-        });
+            deductionOfInventoryAndUpdateRecordStatus(record.getAwardId(), record.getId());
+        }
     }
 
     /**
@@ -135,13 +166,13 @@ public class RedisDeductionAwardNumberDrawExe extends DefaultDrawExe {
      * @param awardId
      * @return
      */
-    public Boolean deductionOfInventoryAndUpdateRecordStatus(Long awardId, Long recordId) {
+    public Boolean deductionOfInventoryAndUpdateRecordStatus(Long awardId ,Long recordId) {
         return super.getTransactionTemplate().execute(status -> {
             Boolean success = Boolean.TRUE;
 
             try {
                 // 扣减库存
-                int update = super.getAwardGateway().deductionAwardNumber(awardId, 1);
+                int update = super.getAwardGateway().deductionAwardNumber(awardId, -1);
 
                 AssertUtil.isTrue(update != 1, "扣减库存失败！");
 
@@ -157,35 +188,5 @@ public class RedisDeductionAwardNumberDrawExe extends DefaultDrawExe {
             }
             return success;
         });
-    }
-
-    /**
-     * MQ执行：扣除库存并修改不可见中奖记录状态
-     *
-     * @param context
-     * @return
-     */
-    public Boolean mqDeductionOfInventoryAndUpdateRecordStatus(ActivityDrawContext context) {
-        return deductionOfInventoryAndUpdateRecordStatus(context.getAwardVO().getId(), context.getRecordId());
-    }
-
-    /**
-     * 定时任务执行：扣除库存并修改不可见中奖记录状态
-     * <p>
-     * 定时扫描用户不可见状态的中奖记录，然后对比当前时间和数据创建时间，
-     * 发现两者相隔 5 分钟，那么，定时任务就可以把这个记录查询出来，再来执行一边，方案三消费者流程
-     */
-    public void ScheduledExecuteDeductionOfInventoryAndUpdateRecordStatus() {
-        LocalDateTime now = LocalDateTime.now().plusMinutes(-5);
-        final var query = new RecordListByParamQuery();
-        query.setStatus(RecordStatusEnum.STATUE_0.getValue());
-        query.setPageSize(100);
-        IPage<RecordEntity> page = super.getRecordGateway().page(query);
-        for (RecordEntity record : page.getRecords()) {
-            if (record.getCreateTime().isAfter(now)) {
-                continue;
-            }
-            deductionOfInventoryAndUpdateRecordStatus(record.getAwardId(), record.getId());
-        }
     }
 }

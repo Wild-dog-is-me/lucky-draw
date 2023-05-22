@@ -32,7 +32,7 @@ public class AwardAddCmdExe {
         AwardEntity entity = awardGateway.save(AwardAssembler.toAddEntity(cmd));
 
         // 扣取奖品库存
-        if (Boolean.FALSE.equals(entity.isPrize())) {
+        if (Boolean.FALSE.equals(entity.gisPrize())) {
             // 代表该奖项是谢谢参与一类，不需要扣减奖品库存
             return AwardAssembler.toAwardVO(entity);
         }

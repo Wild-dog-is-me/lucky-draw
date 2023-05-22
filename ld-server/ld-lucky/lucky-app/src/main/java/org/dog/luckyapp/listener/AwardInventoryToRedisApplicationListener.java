@@ -32,6 +32,7 @@ public class AwardInventoryToRedisApplicationListener implements ApplicationList
 
     @Override
     public void onApplicationEvent(ActivityCreateEvent event) {
+        log.info("ActivityCreateEvent_执行...");
         ActivityConfigVO activityConfig = event.getActivityConfig();
         for (AwardVO awardVO : activityConfig.getAwardVOList()) {
             AwardEntity awardEntity = AwardAssembler.toAwardEntity(awardVO);
@@ -41,7 +42,7 @@ public class AwardInventoryToRedisApplicationListener implements ApplicationList
             String key = getKey(activityConfig.getActivityVO().getId(), awardVO.getId());
             redisTemplate.opsForValue().set(key, awardVO.getNumber());
 
-            log.info("ActivityCreateEvent ===> ActivityId:{}，awardId:{}，存入库存：{} Redis成功...",
+            log.info("ActivityCreateEvent_ActivityId:{}，awardId:{}，存入库存：{} Redis成功...",
                     activityConfig.getActivityVO().getId(),
                     awardVO.getId(),
                     redisTemplate.opsForValue().get(key)
@@ -50,7 +51,7 @@ public class AwardInventoryToRedisApplicationListener implements ApplicationList
     }
 
     public static String getKey(Long activityId, Long awardId) {
+
         return awardInventoryKey + activityId + ":" + awardId;
     }
-
 }
