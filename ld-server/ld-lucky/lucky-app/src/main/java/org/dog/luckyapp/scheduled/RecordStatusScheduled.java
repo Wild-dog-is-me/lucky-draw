@@ -2,6 +2,7 @@ package org.dog.luckyapp.scheduled;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dog.common.annotation.DistributedLock;
 import org.dog.luckyapp.activity.cmd.RedisDeductionAwardNumberDrawExe;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,9 @@ public class RecordStatusScheduled {
      * 每隔五分钟执行一次
      */
     @Scheduled(cron = "0 0/5 * * * ?")
+    @DistributedLock
     public void deductionOfInventoryAndUpdateRecordStatus() {
         drawExe.ScheduledExecuteDeductionOfInventoryAndUpdateRecordStatus();
     }
+
 }

@@ -157,6 +157,7 @@ public class  RedisDeductionAwardNumberDrawExe extends DefaultDrawExe {
                 continue;
             }
             deductionOfInventoryAndUpdateRecordStatus(record.getAwardId(), record.getId());
+            log.error("定时任务执行：扣除库存并修改不可见中奖记录状态");
         }
     }
 
