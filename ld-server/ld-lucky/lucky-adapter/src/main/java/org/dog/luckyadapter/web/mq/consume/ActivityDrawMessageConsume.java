@@ -1,4 +1,4 @@
-package org.dog.luckyapp.mq.consume;
+package org.dog.luckyadapter.web.mq.consume;
 
 import com.alibaba.fastjson.JSON;
 import lombok.AllArgsConstructor;

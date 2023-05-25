@@ -7,14 +7,13 @@ import org.dog.luckyapp.activity.cmd.RedisDeductionAwardNumberDrawExe;
 import org.dog.luckyapp.context.ActivityDrawContext;
 import org.dog.luckyapp.listener.AwardInventoryToRedisApplicationListener;
 import org.dog.luckyapp.listener.event.ActivityCreateEvent;
-import org.dog.luckyapp.mq.product.ActivityDrawMessageProducer;
+import org.dog.luckyapp.mq.producer.ActivityDrawMessageProducer;
 import org.dog.luckyclient.dto.data.ActivityConfigVO;
 import org.dog.luckyclient.dto.data.ActivityVO;
 import org.dog.luckyclient.dto.data.AwardVO;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;

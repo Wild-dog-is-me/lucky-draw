@@ -1,10 +1,12 @@
 package org.dog.common.lock.torenew;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dog.common.lock.DistributedLockTask;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -24,10 +26,10 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
-@AllArgsConstructor
 public class DistributedLockToRenew {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     public static final List<DistributedLockTask> taskList = new ArrayList<>();
 
@@ -43,38 +45,42 @@ public class DistributedLockToRenew {
                 //错误处理
                 log.error("执行扫描Task逻辑出错：", e);
             }
+            System.out.println("我执行了");
+
         }, 1, 4, TimeUnit.SECONDS);
+
     }
 
     private void scanningTask() {
-        if (CollUtil.isEmpty(taskList)) {
+        if (CollectionUtil.isEmpty(taskList)) {
             return;
         }
+
         Iterator<DistributedLockTask> iterator = taskList.iterator();
         while (iterator.hasNext()) {
             DistributedLockTask task = iterator.next();
-
             try {
-                // 判断Redis中是否存在key
+                // 判断 Redis 中是否存在 key
                 if (Boolean.FALSE.equals(redisTemplate.hasKey(task.getKey()))) {
                     iterator.remove();
                     continue;
                 }
 
                 // 判断是否达到最大续约次数
-                if (Boolean.FALSE.equals(task.isMaxToRenewNum(null))) {
-                    // 把耗时任务中断，排除业务执行耗时很久
+                if (Boolean.TRUE.equals(task.isMaxToRenewNum(null))) {
+                    // 把耗时任务中断，排除业务为何执行如此之久
                     task.getThread().interrupt();
                     iterator.remove();
                     continue;
                 }
 
-                // 判断是否到达续约时间
+                // 是否到达续约时间
                 if (Boolean.FALSE.equals(task.isToRenewTime(null))) {
                     continue;
                 }
 
                 log.info("开始续约任务：key:{}", task.getKey());
+                // 开始续约
                 redisTemplate.expire(task.getKey(), task.getExpiredTime(), TimeUnit.SECONDS);
                 task.setNewToRenewNum(task.getNewToRenewNum() + 1);
                 task.setNewUpdatedTime(LocalDateTime.now());
@@ -82,7 +88,8 @@ public class DistributedLockToRenew {
                 //错误处理
                 log.error("处理任务出错：{}，", JSON.toJSONString(task), e);
             }
-        }
-    }
 
+        }
+
+    }
 }

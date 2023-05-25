@@ -8,7 +8,7 @@ import org.dog.config.util.AssertUtil;
 import org.dog.config.util.FileLoad;
 import org.dog.luckyapp.context.ActivityDrawContext;
 import org.dog.luckyapp.listener.AwardInventoryToRedisApplicationListener;
-import org.dog.luckyapp.mq.product.ActivityDrawMessageProducer;
+import org.dog.luckyapp.mq.producer.ActivityDrawMessageProducer;
 import org.dog.luckyclient.dto.query.RecordListByParamQuery;
 import org.dog.luckydomain.gateway.AwardGateway;
 import org.dog.luckydomain.gateway.PrizeGateway;

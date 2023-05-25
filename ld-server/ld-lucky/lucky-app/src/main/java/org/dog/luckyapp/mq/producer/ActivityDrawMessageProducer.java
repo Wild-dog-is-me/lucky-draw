@@ -1,4 +1,4 @@
-package org.dog.luckyapp.mq.product;
+package org.dog.luckyapp.mq.producer;
 
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSON;

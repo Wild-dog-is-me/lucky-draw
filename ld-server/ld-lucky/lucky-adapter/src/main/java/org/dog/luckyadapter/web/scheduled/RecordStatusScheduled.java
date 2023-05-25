@@ -1,4 +1,4 @@
-package org.dog.luckyapp.scheduled;
+package org.dog.luckyadapter.web.scheduled;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +23,23 @@ public class RecordStatusScheduled {
     /**
      * 每隔五分钟执行一次
      */
-    @Scheduled(cron = "0 0/5 * * * ?")
-    @DistributedLock
+//    @Scheduled(cron = "0 0/5 * * * ?")
+//    @DistributedLock
     public void deductionOfInventoryAndUpdateRecordStatus() {
         drawExe.ScheduledExecuteDeductionOfInventoryAndUpdateRecordStatus();
+    }
+
+    @DistributedLock(key = "test")
+    @Scheduled(cron = "0/5 * * * * ?")
+    public void test() {
+
+//        try {
+            System.out.println("业务处理中");
+//            Thread.sleep(1 * 60 * 1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
     }
 
 }
