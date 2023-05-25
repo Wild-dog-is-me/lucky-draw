@@ -21,7 +21,7 @@ public class RecordUpdateStatusCmdExe {
 
     public Boolean execute(RecordUpdateStatusCmd cmd) {
         Boolean updateStatus = recordGateway.updateStatus(cmd.getId(), cmd.getState());
-        log.info("修改记录失败：记录id：{}，状态值：{}", cmd.getId(), cmd.getState());
+        log.info("修改记录：记录id：{}，状态值：{}", cmd.getId(), cmd.getState());
         return updateStatus;
     }
 }

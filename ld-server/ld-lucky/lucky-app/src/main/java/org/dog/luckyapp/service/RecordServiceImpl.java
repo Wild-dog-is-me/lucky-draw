@@ -58,7 +58,7 @@ public class RecordServiceImpl implements IRecordService {
         return getPrizeByRecordId(recordId).getPrizeType();
     }
 
-    public RecordVO getPrizeByRecordId(Long recordId) {
+    public RecordVO  getPrizeByRecordId(Long recordId) {
         final var recordQuery = new RecordListByParamQuery();
         recordQuery.setRecordId(recordId);
 

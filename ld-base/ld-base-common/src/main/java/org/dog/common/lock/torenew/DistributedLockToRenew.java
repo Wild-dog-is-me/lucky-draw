@@ -45,7 +45,6 @@ public class DistributedLockToRenew {
                 //错误处理
                 log.error("执行扫描Task逻辑出错：", e);
             }
-            System.out.println("我执行了");
 
         }, 1, 4, TimeUnit.SECONDS);
 

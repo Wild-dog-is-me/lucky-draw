@@ -1,7 +1,6 @@
 package org.dog.luckyapp.activity.cmd;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -14,7 +13,6 @@ import org.dog.config.util.AssertUtil;
 import org.dog.config.util.SecurityUtil;
 import org.dog.luckyapp.assembler.RecordAssembler;
 import org.dog.luckyapp.context.ActivityDrawContext;
-import org.dog.luckyapp.record.command.RecordAddCmdExe;
 import org.dog.luckyclient.dto.cmd.RecordAddCmd;
 import org.dog.luckyclient.dto.data.*;
 import org.dog.luckyclient.dto.query.RecordListByParamQuery;
