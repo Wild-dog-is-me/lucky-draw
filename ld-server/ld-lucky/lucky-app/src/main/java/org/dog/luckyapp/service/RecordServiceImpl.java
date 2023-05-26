@@ -96,6 +96,9 @@ public class RecordServiceImpl implements IRecordService {
             final var walletForm = new UpdateWalletForm();
             walletForm.setUpdateMoney(money);
             walletForm.setUserId(SecurityUtil.getUserId());
+            log.error("【SecurityUtil.INFO】:userId{},userName{},name{}",
+                    SecurityUtil.getUserId(), SecurityUtil.getUserName(), SecurityUtil.getName());
+            log.error("[用户钱包]=[userId]:{}", SecurityUtil.getUserId());
             WalletUpdateResultVO walletUpdateResultVO = walletFeignApi.updateBalance(walletForm);
 
             if (Boolean.FALSE.equals(walletUpdateResultVO.getResult())) {

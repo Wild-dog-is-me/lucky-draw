@@ -8,12 +8,14 @@ import org.dog.luckyapp.context.ActivityDrawContext;
 import org.dog.luckyapp.listener.AwardInventoryToRedisApplicationListener;
 import org.dog.luckyapp.listener.event.ActivityCreateEvent;
 import org.dog.luckyapp.mq.producer.ActivityDrawMessageProducer;
+import org.dog.luckyclient.api.IRecordService;
 import org.dog.luckyclient.dto.data.ActivityConfigVO;
 import org.dog.luckyclient.dto.data.ActivityVO;
 import org.dog.luckyclient.dto.data.AwardVO;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,7 @@ public class TestController {
 
     private final ActivityDrawMessageProducer activityDrawMessageProducer;
 
-//    private final IRecordServer recordServer;
+    private final IRecordService recordService;
 
     @GetMapping("/activityCreateEventTest")
     public void activityCreateEventTest() {
@@ -85,10 +87,10 @@ public class TestController {
     public Boolean activityDrawMessageProducerTest() {
         return activityDrawMessageProducer.sendTest(new ActivityDrawContext());
     }
-//
-//    @GetMapping("/exchangeMoneyTest")
-//    public Boolean exchangeMoneyTest(@RequestParam("recordId") Long recordId) {
-//        return recordServer.exchangeMoney(recordId);
-//    }
+
+    @GetMapping("/exchangeMoneyTest")
+    public Boolean exchangeMoneyTest(@RequestParam("recordId") Long recordId) {
+        return recordService.exchangeMoney(recordId);
+    }
 
 }

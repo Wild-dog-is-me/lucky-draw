@@ -1,6 +1,7 @@
 package org.dog.ldwallet.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.dog.ldwallet.po.Wallet;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * @Description:
  */
 
+@Mapper
 public interface WalletMapper  extends BaseMapper<Wallet> {
     int updateBalance(@Param("userId") Long userId, @Param("updateMoney") BigDecimal updateMoney, @Param("balance") BigDecimal balance);
 

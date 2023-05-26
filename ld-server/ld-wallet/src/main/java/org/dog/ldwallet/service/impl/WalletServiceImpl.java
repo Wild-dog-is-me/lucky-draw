@@ -66,7 +66,7 @@ public class WalletServiceImpl extends ServiceImpl<WalletMapper, Wallet> impleme
         wallet.setBalance(new BigDecimal(0));
         wallet.setCreateTime(LocalDateTime.now());
         wallet.setUpdateTime(LocalDateTime.now());
-        wallet.setUpdater(SecurityUtil.getUserName());
+        wallet.setUpdater("管理员");
         save(wallet);
         return wallet;
     }
@@ -79,6 +79,7 @@ public class WalletServiceImpl extends ServiceImpl<WalletMapper, Wallet> impleme
     @Override
     public void initAllNotWalletUser() {
         List<Long> noInitUserList = getBaseMapper().notInitUserList();
+        log.info(noInitUserList.toString());
         noInitUserList.stream().parallel().forEach(this::initWallet);
     }
 }
