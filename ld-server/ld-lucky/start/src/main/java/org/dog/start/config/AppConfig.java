@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-//@EnableFeignClients(basePackages = "org.dog.luckyclient.feign")
+@EnableFeignClients(basePackages = "org.dog.luckyclient.feign")
 @Configuration
 @EnableScheduling
 @ComponentScan("org.dog")

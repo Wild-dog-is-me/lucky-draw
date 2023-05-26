@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dog.config.util.AssertUtil;
+import org.dog.config.util.SecurityUtil;
 import org.dog.luckyapp.record.command.RecordAddCmdExe;
 import org.dog.luckyapp.record.command.RecordUpdateStatusCmdExe;
 import org.dog.luckyapp.record.query.RecordListByParamQueryExe;
@@ -14,6 +15,9 @@ import org.dog.luckyclient.dto.cmd.RecordAddCmd;
 import org.dog.luckyclient.dto.cmd.RecordUpdateStatusCmd;
 import org.dog.luckyclient.dto.data.RecordVO;
 import org.dog.luckyclient.dto.query.RecordListByParamQuery;
+import org.dog.luckyclient.feign.WalletFeignApi;
+import org.dog.luckyclient.feign.form.UpdateWalletForm;
+import org.dog.luckyclient.feign.vo.WalletUpdateResultVO;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -35,6 +39,7 @@ public class RecordServiceImpl implements IRecordService {
     private final RecordUpdateStatusCmdExe recordUpdateStatusCmdExe;
     private final RecordListByParamQueryExe recordListByParamQueryExe;
     private final RecordMoneyParamQueryExe recordMoneyParamQueryExe;
+    private final WalletFeignApi walletFeignApi;
 
 
 
@@ -86,26 +91,26 @@ public class RecordServiceImpl implements IRecordService {
         statusCmd.setState(4);
         update(statusCmd);
 
-//        try {
-//            // TODO: 调用给用户钱包价钱逻辑
-//            final var walletForm = new UpdateWalletForm();
-//            walletForm.setUpdateMoney(money);
-//            walletForm.setUserId(SecurityUtil.getUserId());
-//            WalletUpdateResultVO walletUpdateResultVO = walletFeignApi.updateBalance(walletForm);
-//
-//            if (Boolean.FALSE.equals(walletUpdateResultVO.getResult())) {
-//                return Boolean.FALSE;
-//            }
-//        } catch (Exception e) {
-//            //错误处理
-//            log.error("调用修改用户钱包金额失败：", e);
-//
-//            // 回滚记录状态
-//            statusCmd.setState(1);
-//            update(statusCmd);
-//
-//            return Boolean.FALSE;
-//        }
+        try {
+            // 调用给用户钱包价钱逻辑
+            final var walletForm = new UpdateWalletForm();
+            walletForm.setUpdateMoney(money);
+            walletForm.setUserId(SecurityUtil.getUserId());
+            WalletUpdateResultVO walletUpdateResultVO = walletFeignApi.updateBalance(walletForm);
+
+            if (Boolean.FALSE.equals(walletUpdateResultVO.getResult())) {
+                return Boolean.FALSE;
+            }
+        } catch (Exception e) {
+            //错误处理
+            log.error("调用修改用户钱包金额失败：", e);
+
+            // 回滚记录状态
+            statusCmd.setState(1);
+            update(statusCmd);
+
+            return Boolean.FALSE;
+        }
 
         return Boolean.TRUE;
     }

@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: ld-wallet
+
+#默认使用7214端口
+server:
+  port: 7218

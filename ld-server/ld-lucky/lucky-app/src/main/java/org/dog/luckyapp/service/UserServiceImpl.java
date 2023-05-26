@@ -16,6 +16,7 @@ import org.dog.luckyclient.dto.cmd.UserUpdateCmd;
 import org.dog.luckyclient.dto.data.UserVO;
 import org.dog.luckyclient.dto.query.UserListByParamQuery;
 import org.dog.luckyclient.dto.query.UserLoginQuery;
+import org.dog.luckyclient.feign.WalletFeignApi;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -35,10 +36,17 @@ public class UserServiceImpl implements IUserService {
     private final UserLoginQueryExe userLoginQueryExe;
     private final UserListByParamQueryExe userListByParamQueryExe;
     private final UserUpdateCmdExe userUpdateCmdExe;
+    private final WalletFeignApi walletFeignApi;
 
     @Override
     public UserVO register(UserRegisterCmd cmd) {
-        return userRegisterCmdExe.execute(cmd);
+        UserVO execute = userRegisterCmdExe.execute(cmd);
+        try {
+            walletFeignApi.initUserWallet(execute.getId());
+        }catch (Exception e) {
+            log.error("用户注册成功，但钱包初始化失败");
+        }
+        return execute;
     }
 
     @Override

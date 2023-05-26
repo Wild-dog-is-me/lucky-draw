@@ -12,6 +12,7 @@
     </parent>
 
     <modules>
+        <module>ld-wallet</module>
         <module>ld-lucky</module>
     </modules>
     <dependencies>

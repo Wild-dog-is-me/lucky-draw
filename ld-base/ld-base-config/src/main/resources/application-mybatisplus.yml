@@ -1,4 +1,4 @@
-#datasource
+   #datasource
 spring.datasource:
   type: com.alibaba.druid.pool.DruidDataSource
   driverClassName: com.mysql.cj.jdbc.Driver

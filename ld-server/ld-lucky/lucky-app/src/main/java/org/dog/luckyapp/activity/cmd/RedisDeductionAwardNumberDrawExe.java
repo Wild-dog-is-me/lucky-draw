@@ -144,7 +144,7 @@ public class  RedisDeductionAwardNumberDrawExe extends DefaultDrawExe {
      * 定时任务执行：扣除库存并修改不可见中奖记录状态
      * <p>
      * 定时扫描用户不可见状态的中奖记录，然后对比当前时间和数据创建时间，
-     * 发现两者相隔 10 分钟，那么，定时任务就可以把这个记录查询出来，再来执行一边，方案三消费者流程
+     * 发现两者相隔 5 分钟，那么，定时任务就可以把这个记录查询出来，再来执行一边，方案三消费者流程
      */
     public void ScheduledExecuteDeductionOfInventoryAndUpdateRecordStatus() {
         LocalDateTime now = LocalDateTime.now().plusMinutes(-5);
